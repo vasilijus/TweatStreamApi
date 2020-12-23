@@ -13,14 +13,16 @@ const app       = express();
 const server    = http.createServer(app);
 const io        = socketIo(server);
 
+// Routes
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/index.html'));
 });
 
-const basURL    = 'https://api.twitter.com';
-const rulesURL  = basURL+'/2/tweets/search/stream/rules';
-const streamURL = basURL+'/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id';
+const baseURL   = 'https://api.twitter.com';
+const rulesURL  = baseURL+'/2/tweets/search/stream/rules';
+const streamURL = baseURL+'/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id';
 
+// Bits that we're interested in
 const rules = [
     // { value: 'giveaway' },
     { value: 'php' },
@@ -84,14 +86,12 @@ function streamTweats(socket) {
         
     })
 
-
     stream.on('data', (data) => {
         try {
             const json = JSON.parse(data);
             // console.log(json);
+            // pass the json-data as: tweet - to frontend
             socket.emit('tweet', json);
-
-
         } catch (error) {}
     })
 }
