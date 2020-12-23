@@ -22,8 +22,9 @@ const rulesURL  = basURL+'/2/tweets/search/stream/rules';
 const streamURL = basURL+'/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id';
 
 const rules = [
-    { value: 'giveaway' },
-     { value: 'xbox' }
+    // { value: 'giveaway' },
+    { value: 'php' },
+    { value: 'coding' }
 ];
 
 // Get stream rules
@@ -82,6 +83,8 @@ function streamTweats(socket) {
         }
         
     })
+
+
     stream.on('data', (data) => {
         try {
             const json = JSON.parse(data);
@@ -113,7 +116,7 @@ io.on('connection', async () => {
         process.exit(1);
     }
 
-    // streamTweats(io);
+    streamTweats(io);
     
 })
 

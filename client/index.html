@@ -13,7 +13,7 @@
             <a href="#" class="navbar-brand">Realtime Tweets</a>
         </div>
     </nav>
-
+    
     <div class="container">
         <div id="tweetStream"></div>
     </div>
@@ -23,7 +23,7 @@
     <script>
 
         const tweatStream = document.getElementById('tweetStream');
-        tweatStream.innerHTML = "Tweets";
+        tweatStream.innerHTML = "<br>Tweets<br>";
 
         const tweets = [];
 
@@ -35,7 +35,28 @@
 
         socket.on('tweet', (tweet) => {
             // console.log(tweet);
-           
+            const tweetData = {
+                id      : tweet.data.id,
+                auth_id : tweet.data.author_id,
+                text    : tweet.data.text,
+                username: `@${tweet.includes.users[0].username}`,
+            }
+
+            const tweetEl = document.createElement('div');
+            tweetEl.className = 'card my-4';
+            tweetEl.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${tweetData.text}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${tweetData.username}</h6>
+                    <a class="btn btn-primary mt-3"
+                        src="https://twitter.com/${tweetData.username}/status/${tweetData.id}">
+                        <i class="fab fa-twitter">See tweat</i>
+                    </a>
+                </div>
+            `;
+
+            tweatStream.appendChild(tweetEl);
+            
         })
     </script>
 </body>
