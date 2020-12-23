@@ -31,3 +31,10 @@ Bearer_Token
 PORT
 ```
 
+Added Packages to work with web:
+```
+http
+path
+express
+socket.io
+```

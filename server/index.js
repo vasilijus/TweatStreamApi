@@ -1,10 +1,15 @@
+const http      = require('http');
+const path      = require('path');
+const express   = require('express');
+const socketIo  = require('socket.io');
+const needle    = require('needle');
 
-const needle = require('needle');
-const config = require('dotenv').config();
-const TOKEN = process.env.TWITTER_BEARER_TOKEN;
+const config    = require('dotenv').config();
+const TOKEN     = process.env.TWITTER_BEARER_TOKEN;
+const PORT      = process.env.PORT || 3001;
 
-const basURL = 'https://api.twitter.com';
-const rulesURL = basURL+'/2/tweets/search/stream/rules';
+const basURL    = 'https://api.twitter.com';
+const rulesURL  = basURL+'/2/tweets/search/stream/rules';
 const streamURL = basURL+'/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id';
 
 const rules = [
