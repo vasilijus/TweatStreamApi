@@ -8,6 +8,15 @@ const config    = require('dotenv').config();
 const TOKEN     = process.env.TWITTER_BEARER_TOKEN;
 const PORT      = process.env.PORT || 3001;
 
+const app       = express();
+
+const server    = http.createServer(app);
+const io        = socketIo(server);
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/index.html'));
+});
+
 const basURL    = 'https://api.twitter.com';
 const rulesURL  = basURL+'/2/tweets/search/stream/rules';
 const streamURL = basURL+'/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id';
@@ -66,39 +75,45 @@ async function deleteRules(rules) {
     return response.body;
 }
 
-(async () => {
-    let currentRules;
-
-    try {
-        // Get all stream rules
-        currentRules = await getRules();
-
-        // Delete all stram rules
-        await deleteRules(currentRules);
+function streamTweats() {
+    const stream = needle.get(streamURL, {
+        headers: {
+            Authorization: `Bearer ${TOKEN}`
+        }
         
-        // Set rules base on array above 
-        await setRules();
-    } catch(error) {
-        console.error(error);
-        process.exit(1);
-    }
+    })
+    stream.on('data', (data) => {
+        try {
+            const json = JSON.parse(data);
+            console.log(json);
+        } catch (error) {}
+    })
+}
 
-    function streamTweats() {
-        const stream = needle.get(streamURL, {
-            headers: {
-                Authorization: `Bearer ${TOKEN}`
-            }
-            
-        })
-        stream.on('data', (data) => {
-            try {
-                const json = JSON.parse(data);
-                console.log(json);
-            } catch (error) {}
-        })
-    }
+io.on('connection', () => {
+    console.log(`Client connected...`);
+})
 
-    streamTweats();
+// (async () => {
+//     let currentRules;
+
+//     try {
+//         // Get all stream rules
+//         currentRules = await getRules();
+
+//         // Delete all stram rules
+//         await deleteRules(currentRules);
+        
+//         // Set rules base on array above 
+//         await setRules();
+//     } catch(error) {
+//         console.error(error);
+//         process.exit(1);
+//     }
+//
+//     streamTweats();
     
-})()
+// })()
+
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
