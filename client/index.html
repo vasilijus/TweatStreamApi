@@ -52,7 +52,8 @@
                     this.text = text;           // str
                 }
             }
-            
+            // const Tweet = require('../client/Model/Tweet.js');
+
             const tweetData = new Tweet(tweet.data.id, tweet.data.author_id, tweet.data.text, `@${tweet.includes.users[0].username}`)
             tweets.push(tweet);
 
@@ -64,7 +65,7 @@
                     <h6 class="card-subtitle mb-2 text-muted">${tweetData.username}</h6>
                     <a class="btn btn-primary mt-3"
                         src="https://twitter.com/${tweetData.username}/status/${tweetData.id}">
-                        <i class="fab fa-twitter">See tweat</i>
+                        <i class="fab fa-twitter">&nbsp;See tweat</i>
                     </a>
                 </div>
             `;
